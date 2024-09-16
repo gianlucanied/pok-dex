@@ -1,12 +1,11 @@
 const MAX_POKEMON = 151;
 const listWrapper = document.querySelector(".list-wrapper");
 const searchInput = document.querySelector("#search-input");
-const numberFilter = document.querySelector("#number");
-const nameFilter = document.querySelector("#name");
 const notFoundMessage = document.querySelector("#not-found-message");
 
 let allPokemons = [];
 
+// Fetch dei Pokémon
 fetch(`https://pokeapi.co/api/v2/pokemon?limit=${MAX_POKEMON}`)
   .then((response) => response.json())
   .then((data) => {
@@ -30,6 +29,7 @@ async function fetchPokemonDataBeforeRedirect(id) {
   }
 }
 
+// Funzione per visualizzare i Pokémon
 function displayPokemons(pokemon) {
   listWrapper.innerHTML = "";
 
@@ -60,24 +60,17 @@ function displayPokemons(pokemon) {
   });
 }
 
+// Aggiungi l'evento di ricerca al campo input
 searchInput.addEventListener("keyup", handleSearch);
 
+// Funzione di gestione della ricerca
 function handleSearch() {
   const searchTerm = searchInput.value.toLowerCase();
-  let filteredPokemons;
 
-  if (numberFilter.checked) {
-    filteredPokemons = allPokemons.filter((pokemon) => {
-      const pokemonID = pokemon.url.split("/")[6];
-      return pokemonID.startsWith(searchTerm);
-    });
-  } else if (nameFilter.checked) {
-    filteredPokemons = allPokemons.filter((pokemon) =>
-      pokemon.name.toLowerCase().startsWith(searchTerm)
-    );
-  } else {
-    filteredPokemons = allPokemons;
-  }
+  // Filtra solo per nome
+  const filteredPokemons = allPokemons.filter((pokemon) =>
+    pokemon.name.toLowerCase().startsWith(searchTerm)
+  );
 
   displayPokemons(filteredPokemons);
 
@@ -88,6 +81,7 @@ function handleSearch() {
   }
 }
 
+// Aggiungi l'evento al pulsante di chiusura per pulire la ricerca
 const closeButton = document.querySelector(".search-close-icon");
 closeButton.addEventListener("click", clearSearch);
 
